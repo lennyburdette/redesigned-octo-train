@@ -1,0 +1,18 @@
+extend schema
+  @link(url: "https://specs.apollo.dev/federation/v2.3", import: ["@key"])
+
+interface Account @key(fields: "id") {
+  id: ID!
+}
+
+type Query {
+  accounts: [Account]
+}
+
+type Domain1Account implements Account @key(fields: "id") {
+  id: ID!
+}
+
+type Domain2Account implements Account @key(fields: "id") {
+  id: ID!
+}

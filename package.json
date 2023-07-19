@@ -1,0 +1,19 @@
+{
+  "name": "entity-interfaces",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "@apollo/server": "^4.7.5",
+    "@apollo/subgraph": "^2.5.0",
+    "graphql": "^16.7.1",
+    "nodemon": "^3.0.1"
+  },
+  "scripts": {
+    "compose": "rover supergraph compose --config supergraph.yaml > supergraph.graphql",
+    "subgraphs": "nodemon subgraphs.js -e js,graphql",
+    "router": "./router --dev -s supergraph.graphql -c router.yaml",
+    "dev": "rover dev --supergraph-config supergraph.yaml --router-config router.yaml"
+  }
+}

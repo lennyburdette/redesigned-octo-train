@@ -1,0 +1,18 @@
+federation_version: =2.4.5
+subgraphs:
+  accounts:
+    routing_url: http://localhost:4001/
+    schema:
+      file: accounts.graphql
+  domain1:
+    routing_url: http://localhost:4002/
+    schema:
+      file: domain1.graphql
+  domain2:
+    routing_url: http://localhost:4003/
+    schema:
+      file: domain2.graphql
+  extending:
+    routing_url: http://localhost:4004/
+    schema:
+      file: extending.graphql

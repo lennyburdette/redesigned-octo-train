@@ -1,0 +1,82 @@
+schema
+  @link(url: "https://specs.apollo.dev/link/v1.0")
+  @link(url: "https://specs.apollo.dev/join/v0.3", for: EXECUTION)
+{
+  query: Query
+}
+
+directive @join__enumValue(graph: join__Graph!) repeatable on ENUM_VALUE
+
+directive @join__field(graph: join__Graph, requires: join__FieldSet, provides: join__FieldSet, type: String, external: Boolean, override: String, usedOverridden: Boolean) repeatable on FIELD_DEFINITION | INPUT_FIELD_DEFINITION
+
+directive @join__graph(name: String!, url: String!) on ENUM_VALUE
+
+directive @join__implements(graph: join__Graph!, interface: String!) repeatable on OBJECT | INTERFACE
+
+directive @join__type(graph: join__Graph!, key: join__FieldSet, extension: Boolean! = false, resolvable: Boolean! = true, isInterfaceObject: Boolean! = false) repeatable on OBJECT | INTERFACE | UNION | ENUM | INPUT_OBJECT | SCALAR
+
+directive @join__unionMember(graph: join__Graph!, member: String!) repeatable on UNION
+
+directive @link(url: String, as: String, for: link__Purpose, import: [link__Import]) repeatable on SCHEMA
+
+interface Account
+  @join__type(graph: ACCOUNTS, key: "id")
+  @join__type(graph: EXTENDING, key: "id", isInterfaceObject: true)
+{
+  id: ID!
+  extending: String @join__field(graph: EXTENDING)
+}
+
+type Domain1Account implements Account
+  @join__implements(graph: ACCOUNTS, interface: "Account")
+  @join__type(graph: ACCOUNTS, key: "id")
+  @join__type(graph: DOMAIN1, key: "id")
+{
+  id: ID!
+  name: String @join__field(graph: DOMAIN1)
+  domain1Field: String @join__field(graph: DOMAIN1)
+  extending: String @join__field
+}
+
+type Domain2Account implements Account
+  @join__implements(graph: ACCOUNTS, interface: "Account")
+  @join__type(graph: ACCOUNTS, key: "id")
+  @join__type(graph: DOMAIN2, key: "id")
+{
+  id: ID!
+  name: String @join__field(graph: DOMAIN2)
+  domain2Field: String @join__field(graph: DOMAIN2)
+  extending: String @join__field
+}
+
+scalar join__FieldSet
+
+enum join__Graph {
+  ACCOUNTS @join__graph(name: "accounts", url: "http://localhost:4001/")
+  DOMAIN1 @join__graph(name: "domain1", url: "http://localhost:4002/")
+  DOMAIN2 @join__graph(name: "domain2", url: "http://localhost:4003/")
+  EXTENDING @join__graph(name: "extending", url: "http://localhost:4004/")
+}
+
+scalar link__Import
+
+enum link__Purpose {
+  """
+  `SECURITY` features provide metadata necessary to securely resolve fields.
+  """
+  SECURITY
+
+  """
+  `EXECUTION` features provide metadata necessary for operation execution.
+  """
+  EXECUTION
+}
+
+type Query
+  @join__type(graph: ACCOUNTS)
+  @join__type(graph: DOMAIN1)
+  @join__type(graph: DOMAIN2)
+  @join__type(graph: EXTENDING)
+{
+  accounts: [Account] @join__field(graph: ACCOUNTS)
+}

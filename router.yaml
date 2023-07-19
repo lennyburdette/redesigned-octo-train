@@ -1,0 +1,2 @@
+# yaml-language-server: $schema=router.config.json
+rhai: {}
